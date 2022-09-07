@@ -10,9 +10,23 @@
 		C03F4E3C28C1BA8100A0C35C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F4E3B28C1BA8100A0C35C /* AppDelegate.swift */; };
 		C03F4E3E28C1BA8100A0C35C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F4E3D28C1BA8100A0C35C /* SceneDelegate.swift */; };
 		C03F4E4028C1BA8100A0C35C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F4E3F28C1BA8100A0C35C /* ViewController.swift */; };
-		C03F4E4328C1BA8100A0C35C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C03F4E4128C1BA8100A0C35C /* Main.storyboard */; };
 		C03F4E4528C1BA8200A0C35C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C03F4E4428C1BA8200A0C35C /* Assets.xcassets */; };
 		C03F4E4828C1BA8200A0C35C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C03F4E4628C1BA8200A0C35C /* LaunchScreen.storyboard */; };
+		C03F502928C1C1E800A0C35C /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501528C1C1E800A0C35C /* UIViewController+Extensions.swift */; };
+		C03F502A28C1C1E800A0C35C /* UIButton+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501628C1C1E800A0C35C /* UIButton+Extensions.swift */; };
+		C03F502B28C1C1E800A0C35C /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501728C1C1E800A0C35C /* UIView+Extensions.swift */; };
+		C03F502F28C1C1E800A0C35C /* Weakify+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501B28C1C1E800A0C35C /* Weakify+Ext.swift */; };
+		C03F503028C1C1E800A0C35C /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501C28C1C1E800A0C35C /* UITextField+Extensions.swift */; };
+		C03F503128C1C1E800A0C35C /* UIView+SafeAreaAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501E28C1C1E800A0C35C /* UIView+SafeAreaAnchors.swift */; };
+		C03F503228C1C1E800A0C35C /* NSLayoutDimension+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F501F28C1C1E800A0C35C /* NSLayoutDimension+Extension.swift */; };
+		C03F503328C1C1E800A0C35C /* AutoLayoutOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502028C1C1E800A0C35C /* AutoLayoutOption.swift */; };
+		C03F503428C1C1E800A0C35C /* UIView+LayoutGuides.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502128C1C1E800A0C35C /* UIView+LayoutGuides.swift */; };
+		C03F503528C1C1E800A0C35C /* Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502228C1C1E800A0C35C /* Padding.swift */; };
+		C03F503628C1C1E800A0C35C /* UIView+RawAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502328C1C1E800A0C35C /* UIView+RawAnchors.swift */; };
+		C03F503728C1C1E800A0C35C /* ActionTypealias.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502428C1C1E800A0C35C /* ActionTypealias.swift */; };
+		C03F503828C1C1E800A0C35C /* UIView+AxisAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502528C1C1E800A0C35C /* UIView+AxisAttribute.swift */; };
+		C03F503928C1C1E800A0C35C /* ViewCodeContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */; };
+		C03F503C28C1C22600A0C35C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F503B28C1C22600A0C35C /* HomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,10 +34,24 @@
 		C03F4E3B28C1BA8100A0C35C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C03F4E3D28C1BA8100A0C35C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		C03F4E3F28C1BA8100A0C35C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		C03F4E4228C1BA8100A0C35C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C03F4E4428C1BA8200A0C35C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C03F4E4728C1BA8200A0C35C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C03F4E4928C1BA8200A0C35C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C03F501528C1C1E800A0C35C /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		C03F501628C1C1E800A0C35C /* UIButton+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extensions.swift"; sourceTree = "<group>"; };
+		C03F501728C1C1E800A0C35C /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		C03F501B28C1C1E800A0C35C /* Weakify+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Weakify+Ext.swift"; sourceTree = "<group>"; };
+		C03F501C28C1C1E800A0C35C /* UITextField+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
+		C03F501E28C1C1E800A0C35C /* UIView+SafeAreaAnchors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+SafeAreaAnchors.swift"; sourceTree = "<group>"; };
+		C03F501F28C1C1E800A0C35C /* NSLayoutDimension+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutDimension+Extension.swift"; sourceTree = "<group>"; };
+		C03F502028C1C1E800A0C35C /* AutoLayoutOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoLayoutOption.swift; sourceTree = "<group>"; };
+		C03F502128C1C1E800A0C35C /* UIView+LayoutGuides.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+LayoutGuides.swift"; sourceTree = "<group>"; };
+		C03F502228C1C1E800A0C35C /* Padding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Padding.swift; sourceTree = "<group>"; };
+		C03F502328C1C1E800A0C35C /* UIView+RawAnchors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+RawAnchors.swift"; sourceTree = "<group>"; };
+		C03F502428C1C1E800A0C35C /* ActionTypealias.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionTypealias.swift; sourceTree = "<group>"; };
+		C03F502528C1C1E800A0C35C /* UIView+AxisAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+AxisAttribute.swift"; sourceTree = "<group>"; };
+		C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCodeContract.swift; sourceTree = "<group>"; };
+		C03F503B28C1C22600A0C35C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +84,61 @@
 		C03F4E3A28C1BA8100A0C35C /* BluetoothApp */ = {
 			isa = PBXGroup;
 			children = (
+				C03F503A28C1C20A00A0C35C /* Views */,
+				C03F501328C1C1E800A0C35C /* Extensions */,
+				C03F501D28C1C1E800A0C35C /* Helpers */,
+				C03F502628C1C1E800A0C35C /* Protocols */,
 				C03F4E3B28C1BA8100A0C35C /* AppDelegate.swift */,
 				C03F4E3D28C1BA8100A0C35C /* SceneDelegate.swift */,
-				C03F4E3F28C1BA8100A0C35C /* ViewController.swift */,
-				C03F4E4128C1BA8100A0C35C /* Main.storyboard */,
 				C03F4E4428C1BA8200A0C35C /* Assets.xcassets */,
 				C03F4E4628C1BA8200A0C35C /* LaunchScreen.storyboard */,
 				C03F4E4928C1BA8200A0C35C /* Info.plist */,
 			);
 			path = BluetoothApp;
+			sourceTree = "<group>";
+		};
+		C03F501328C1C1E800A0C35C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C03F501528C1C1E800A0C35C /* UIViewController+Extensions.swift */,
+				C03F501628C1C1E800A0C35C /* UIButton+Extensions.swift */,
+				C03F501728C1C1E800A0C35C /* UIView+Extensions.swift */,
+				C03F501B28C1C1E800A0C35C /* Weakify+Ext.swift */,
+				C03F501C28C1C1E800A0C35C /* UITextField+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C03F501D28C1C1E800A0C35C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				C03F501E28C1C1E800A0C35C /* UIView+SafeAreaAnchors.swift */,
+				C03F501F28C1C1E800A0C35C /* NSLayoutDimension+Extension.swift */,
+				C03F502028C1C1E800A0C35C /* AutoLayoutOption.swift */,
+				C03F502128C1C1E800A0C35C /* UIView+LayoutGuides.swift */,
+				C03F502228C1C1E800A0C35C /* Padding.swift */,
+				C03F502328C1C1E800A0C35C /* UIView+RawAnchors.swift */,
+				C03F502428C1C1E800A0C35C /* ActionTypealias.swift */,
+				C03F502528C1C1E800A0C35C /* UIView+AxisAttribute.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		C03F502628C1C1E800A0C35C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		C03F503A28C1C20A00A0C35C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C03F4E3F28C1BA8100A0C35C /* ViewController.swift */,
+				C03F503B28C1C22600A0C35C /* HomeView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +201,6 @@
 			files = (
 				C03F4E4828C1BA8200A0C35C /* LaunchScreen.storyboard in Resources */,
 				C03F4E4528C1BA8200A0C35C /* Assets.xcassets in Resources */,
-				C03F4E4328C1BA8100A0C35C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +211,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C03F502F28C1C1E800A0C35C /* Weakify+Ext.swift in Sources */,
+				C03F502B28C1C1E800A0C35C /* UIView+Extensions.swift in Sources */,
+				C03F503728C1C1E800A0C35C /* ActionTypealias.swift in Sources */,
+				C03F502A28C1C1E800A0C35C /* UIButton+Extensions.swift in Sources */,
+				C03F503C28C1C22600A0C35C /* HomeView.swift in Sources */,
 				C03F4E4028C1BA8100A0C35C /* ViewController.swift in Sources */,
+				C03F503828C1C1E800A0C35C /* UIView+AxisAttribute.swift in Sources */,
+				C03F503928C1C1E800A0C35C /* ViewCodeContract.swift in Sources */,
+				C03F502928C1C1E800A0C35C /* UIViewController+Extensions.swift in Sources */,
+				C03F503428C1C1E800A0C35C /* UIView+LayoutGuides.swift in Sources */,
+				C03F503128C1C1E800A0C35C /* UIView+SafeAreaAnchors.swift in Sources */,
 				C03F4E3C28C1BA8100A0C35C /* AppDelegate.swift in Sources */,
+				C03F503028C1C1E800A0C35C /* UITextField+Extensions.swift in Sources */,
+				C03F503328C1C1E800A0C35C /* AutoLayoutOption.swift in Sources */,
 				C03F4E3E28C1BA8100A0C35C /* SceneDelegate.swift in Sources */,
+				C03F503228C1C1E800A0C35C /* NSLayoutDimension+Extension.swift in Sources */,
+				C03F503628C1C1E800A0C35C /* UIView+RawAnchors.swift in Sources */,
+				C03F503528C1C1E800A0C35C /* Padding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		C03F4E4128C1BA8100A0C35C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C03F4E4228C1BA8100A0C35C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		C03F4E4628C1BA8200A0C35C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -292,9 +372,10 @@
 				INFOPLIST_FILE = BluetoothApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,9 +401,10 @@
 				INFOPLIST_FILE = BluetoothApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
