@@ -10,15 +10,14 @@ import CoreBluetooth
 
 class ViewController: UIViewController {
 
-    private var manager: CBCentralManager?
+    private var centralManager: CBCentralManager?
     private lazy var rootView = HomeView()
-    private var bluefruitPeripheral: CBPeripheral?
+    private var peripheral: CBPeripheral?
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        manager = CBCentralManager(delegate: self, queue: nil)
-        manager?.delegate = self
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        centralManager?.delegate = self
     }
 
     override func loadView() {
@@ -58,13 +57,13 @@ extension ViewController: CBCentralManagerDelegate {
         if peripheral.name == "[TV] Samsung AU7700 50 TV"{
             
             ///interrompe o escaneamento
-            manager?.stopScan()
+            self.centralManager?.stopScan()
             
             /// Atribui ao o periferico selecionado
-            bluefruitPeripheral = peripheral
+            self.peripheral = peripheral
             
             ///Conecta com o disposivo
-            manager?.connect(bluefruitPeripheral ?? peripheral)
+            self.centralManager?.connect(self.peripheral ?? peripheral)
         }
     }
     
