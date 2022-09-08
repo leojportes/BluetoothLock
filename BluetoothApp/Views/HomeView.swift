@@ -40,6 +40,16 @@ final class HomeView: UIView, ViewCodeContract {
         return button
     }()
     
+    lazy var connectedToLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 12)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     @objc func handleConnectButton() {
         actionConnect?()
     }
@@ -47,6 +57,7 @@ final class HomeView: UIView, ViewCodeContract {
     func setupHierarchy() {
         addSubview(bluetoothImage)
         addSubview(connectButton)
+        addSubview(connectedToLabel)
     }
     
     func setupConstraints() {
@@ -62,6 +73,11 @@ final class HomeView: UIView, ViewCodeContract {
             .leftAnchor(in: self, padding: 10)
             .rightAnchor(in: self, padding: 10)
             .heightAnchor(40)
+        
+        connectedToLabel
+            .topAnchor(in: connectButton, attribute: .bottom, padding: 20)
+            .leftAnchor(in: self, padding: 10)
+            .rightAnchor(in: self, padding: 10)
     }
     
     func setupConfiguration() {

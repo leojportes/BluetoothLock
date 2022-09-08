@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreBluetooth
+import AVFoundation
 
 class ViewController: UIViewController {
 
@@ -26,6 +27,7 @@ class ViewController: UIViewController {
     
     func getActionButton() {
         rootView.actionConnect = { [ weak self ] in
+            self?.rootView.connectButton.loadingIndicator(show: true)
             self?.centralManager = CBCentralManager(delegate: self, queue: nil)
             self?.centralManager?.delegate = self
         }
@@ -37,7 +39,7 @@ class ViewController: UIViewController {
     
     func startScanning() {
       if let central = centralManager {
-        central.scanForPeripherals(withServices: nil, options: nil)
+        central.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey:false, CBConnectPeripheralOptionNotifyOnConnectionKey: false, CBConnectPeripheralOptionNotifyOnDisconnectionKey: false, CBConnectPeripheralOptionNotifyOnNotificationKey: false])
       }
     }
     
@@ -70,27 +72,34 @@ extension ViewController: CBCentralManagerDelegate {
         if peripheral.identifier.uuidString == "3C9C13BB-23BF-46FA-265F-36BA31B60DCB"{
             /// Atribui ao o periferico selecionado
             self.peripheral = peripheral
-            
-            /// para o escaneamento
-            self.centralManager?.stopScan()
-            
+
             ///Conecta com o disposivo
             self.centralManager?.connect(self.peripheral ?? peripheral)
         }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        ///interrompe o escaneamento
+        guard let namePeripheral = peripheral.name else { return }
+
+        rootView.connectedToLabel.text = "Conectado a: \(namePeripheral)"
         showAlert(title: "Parabéns", messsage: "Dispositivo foi conectado com sucesso!!")
+        rootView.connectButton.loadingIndicator(show: false)
+        self.centralManager?.stopScan()
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        //self.startScanning()
+        rootView.connectedToLabel.text = ""
         showAlert(title: "Atenção", messsage: "Dispositivo foi desconectado")
+        self.startScanning()
+        startSong(id: 1005)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("conexao falhou")
+        showAlert(title: "Atenção", messsage: "Conexao falhou")
+    }
+
+    private func startSong(id: UInt32) {
+        AudioServicesPlaySystemSound(SystemSoundID(id))
     }
     
 }
