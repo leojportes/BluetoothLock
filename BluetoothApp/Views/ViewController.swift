@@ -81,12 +81,12 @@ extension ViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         ///interrompe o escaneamento
-        print("conectado")
+        showAlert(title: "Parabéns", messsage: "Dispositivo foi conectado com sucesso!!")
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         //self.startScanning()
-        print("desconectado")
+        showAlert(title: "Atenção", messsage: "Dispositivo foi desconectado")
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
