@@ -10,59 +10,61 @@ import UIKit
 import CoreBluetooth
 
 final class HomeView: UIView, ViewCodeContract {
-
-    var items: [CBPeripheral] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
     
+    var actionConnect: (() -> Void)?
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        backgroundColor = .yellow
+        backgroundColor = .white
         setupView()
     }
-
-    private lazy var tableView: UITableView = {
-        let table = UITableView()
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.delegate = self
-        table.dataSource = self
-        return table
+    
+    lazy var bluetoothImage: UIImageView = {
+        let imagem = UIImageView()
+        imagem.image = UIImage(named: "imageBluetooth")
+        imagem.contentMode = .scaleAspectFit
+        imagem.translatesAutoresizingMaskIntoConstraints = false
+        return imagem
     }()
 
+    lazy var connectButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Conectar", for: .normal)
+        button.setImage(UIImage(named: "iconBluetooth"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.backgroundColor = .systemGray
+        button.layer.cornerRadius = 20
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(handleConnectButton), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func handleConnectButton() {
+        actionConnect?()
+    }
+
     func setupHierarchy() {
-        addSubview(tableView)
+        addSubview(bluetoothImage)
+        addSubview(connectButton)
     }
     
     func setupConstraints() {
-        tableView
-            .topAnchor(in: self, padding: 10)
+        
+        bluetoothImage
+            .topAnchor(in: self, padding: 200)
+            .centerX(in: self)
+            .widthAnchor(114)
+            .heightAnchor(114)
+        
+        connectButton
+            .topAnchor(in: bluetoothImage, attribute: .bottom, padding: 65)
             .leftAnchor(in: self, padding: 10)
             .rightAnchor(in: self, padding: 10)
-            .bottomAnchor(in: self, padding: 10)
+            .heightAnchor(40)
     }
     
     func setupConfiguration() {
         
     }
-}
-
-extension HomeView: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? UITableViewCell else { return UITableViewCell() }
-//        let item = items[indexPath.row]
-        cell.textLabel?.text = "kk"
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UIApplication.shared.isIdleTimerDisabled = false
-    }
-    
 }

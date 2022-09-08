@@ -16,8 +16,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        centralManager?.delegate = self
+        getActionButton()
     }
 
     override func loadView() {
@@ -25,8 +24,21 @@ class ViewController: UIViewController {
         view = rootView
     }
     
+    func getActionButton() {
+        rootView.actionConnect = { [ weak self ] in
+            self?.centralManager = CBCentralManager(delegate: self, queue: nil)
+            self?.centralManager?.delegate = self
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func startScanning() {
+      if let central = centralManager {
+        central.scanForPeripherals(withServices: nil, options: nil)
+      }
     }
     
 }
@@ -44,35 +56,37 @@ extension ViewController: CBCentralManagerDelegate {
         case .resetting: consoleMsg = "-> Bluetooth resetting"
         case .unsupported: consoleMsg = "-> Bluetooth unsupported"
         case .unauthorized: consoleMsg = "-> Bluetooth unauthorized"
-        case .poweredOn: consoleMsg = "-> Bluetooth is powered on"
+        case .poweredOn:
+            consoleMsg = "-> Bluetooth is powered on"
+            startScanning()
         @unknown default:
             break
         }
         print(consoleMsg)
-        
-        print(central.scanForPeripherals(withServices: nil, options: nil))
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        if peripheral.name == "[TV] Samsung AU7700 50 TV"{
-            
-            ///interrompe o escaneamento
-            self.centralManager?.stopScan()
-            
+        
+        if peripheral.identifier.uuidString == "3C9C13BB-23BF-46FA-265F-36BA31B60DCB"{
             /// Atribui ao o periferico selecionado
             self.peripheral = peripheral
+            
+            /// para o escaneamento
+            self.centralManager?.stopScan()
             
             ///Conecta com o disposivo
             self.centralManager?.connect(self.peripheral ?? peripheral)
         }
     }
     
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-       print("desconectado")
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        ///interrompe o escaneamento
+        print("conectado")
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("conectado")
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        //self.startScanning()
+        print("desconectado")
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
