@@ -7,12 +7,17 @@
 
 import UIKit
 import CoreBluetooth
+import AVFoundation
 
 class ViewController: UIViewController {
 
     private var centralManager: CBCentralManager?
     private lazy var rootView = HomeView()
     private var peripheral: CBPeripheral?
+    
+    private var timerForScanning: Timer?
+    var backgroundTaskId: UIBackgroundTaskIdentifier = .invalid
+    let reconnectInterval = 15 // seconds
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +71,8 @@ extension ViewController: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
+        // Teste Léo.
+       // if peripheral.name == "[TV] Samsung 7 Series (50)" {
         if peripheral.identifier.uuidString == "3C9C13BB-23BF-46FA-265F-36BA31B60DCB"{
             /// Atribui ao o periferico selecionado
             self.peripheral = peripheral
@@ -81,16 +87,44 @@ extension ViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         ///interrompe o escaneamento
+        tryReconnect(central, to: peripheral)
         showAlert(title: "Parabéns", messsage: "Dispositivo foi conectado com sucesso!!")
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         //self.startScanning()
+        tryReconnect(central, to: peripheral)
         showAlert(title: "Atenção", messsage: "Dispositivo foi desconectado")
+        startSong(id: 1005)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        tryReconnect(central, to: peripheral)
         print("conexao falhou")
+        showAlert(title: "Atenção", messsage: "Conexao falhou")
+    }
+
+    // MARK: - Aux methods
+    
+    private func tryReconnect(_ central: CBCentralManager, to peripheral: CBPeripheral) {
+        DispatchQueue.main.async { // while in background mode Timer would work only being in main queue
+            self.backgroundTaskId = UIApplication.shared.beginBackgroundTask (withName: "reconnectAgain") {
+                UIApplication.shared.endBackgroundTask(self.backgroundTaskId)
+                self.backgroundTaskId = .invalid
+            }
+            
+            self.timerForScanning?.invalidate()
+            self.timerForScanning = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.reconnectInterval), repeats: false) { _ in
+                central.connect(peripheral, options: [:])
+                
+                UIApplication.shared.endBackgroundTask(self.backgroundTaskId)
+                self.backgroundTaskId = .invalid
+            }
+        }
+    }
+
+    private func startSong(id: UInt32) {
+        AudioServicesPlaySystemSound(SystemSoundID(id))
     }
     
 }
