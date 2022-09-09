@@ -31,16 +31,6 @@ final class HomeView: UIView {
         return imagem
     }()
     
-    lazy var connectToDeviceLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = .black
-        label.text = "Conecte-se a um dispositivo"
-        label.font = .boldSystemFont(ofSize: 18)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.register(CustomCell.self, forCellReuseIdentifier: "cell")
@@ -58,7 +48,6 @@ final class HomeView: UIView {
 extension HomeView: ViewCodeContract {
     func setupHierarchy() {
         addSubview(bluetoothImage)
-        addSubview(connectToDeviceLabel)
         addSubview(tableView)
     }
     
@@ -71,26 +60,14 @@ extension HomeView: ViewCodeContract {
             .heightAnchor(144)
         
         NSLayoutConstraint.activate([
-            connectToDeviceLabel.topAnchor.constraint(equalTo: bluetoothImage.bottomAnchor, constant: 30),
-            connectToDeviceLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            tableView.topAnchor.constraint(equalTo: connectToDeviceLabel.bottomAnchor, constant: 15),
+            tableView.topAnchor.constraint(equalTo: bluetoothImage.bottomAnchor, constant: 15),
             tableView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5),
             tableView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
 
 
         ])
-//        connectToDeviceLabel
-        
-//            .topAnchor(in: bluetoothImage, attribute: .bottom, padding: 30)
-//            .centerX(in: self)
-//
-//        tableView
-//            .topAnchor(in: connectToDeviceLabel, attribute: .bottom, padding: 15)
-//            .leftAnchor(in: self, padding: 5)
-//            .rightAnchor(in: self, padding: 5)
-//            .bottomAnchor(in: self, padding: 15)
     }
     
     func setupConfiguration() {
@@ -100,6 +77,11 @@ extension HomeView: ViewCodeContract {
 
 // MARK: - Delegate and DataSource tableview
 extension HomeView: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 5
     }
@@ -112,5 +94,11 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         clickInCell?(indexPath)
+    }
+    
+    
+    // TEM QUE AJUSTAR ESSA PARTE
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Conecte-se a um dispositivo"
     }
 }
