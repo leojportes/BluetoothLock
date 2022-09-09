@@ -19,11 +19,19 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
         self.centralManager?.delegate = self
+        getActionsView()
     }
 
     override func loadView() {
         super.loadView()
         view = rootView
+    }
+    
+    func getActionsView() {
+        rootView.clickInCell = { [ weak self ] indexs in
+            print(indexs)
+            self?.showAlertLoading()
+        }
     }
     
     override func didReceiveMemoryWarning() {

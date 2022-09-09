@@ -11,6 +11,8 @@ import CoreBluetooth
 
 final class HomeView: UIView {
     
+    var clickInCell: ((IndexPath) -> Void)?
+    
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         setupView()
@@ -109,6 +111,6 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("alert")
+        clickInCell?(indexPath)
     }
 }
