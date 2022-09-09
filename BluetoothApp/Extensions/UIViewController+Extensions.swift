@@ -16,7 +16,7 @@ extension UIViewController {
     }
     
     func showAlertLoading() {
-        let alert = UIAlertController(title: "conectando...", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "conectando...", message: nil, preferredStyle: .alert)
         
         let activityIndicator = UIActivityIndicatorView(style: .gray)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -27,10 +27,14 @@ extension UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "[TV] Samsung AU770050 TV"
         
+        let cancel = UIAlertAction(title: "cancelar", style: .cancel)
+        
+        alert.view.tintColor = .black
+        alert.addAction(cancel)
         alert.view.addSubview(label)
         alert.view.addSubview(activityIndicator)
-        alert.view.heightAnchor.constraint(equalToConstant: 150).isActive = true
         
+        alert.view.heightAnchor.constraint(equalToConstant: 170).isActive = true
         label.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor).isActive = true
         label.topAnchor.constraint(equalTo: alert.view.topAnchor, constant: 50).isActive = true
         
