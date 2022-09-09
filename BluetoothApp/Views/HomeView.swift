@@ -68,15 +68,27 @@ extension HomeView: ViewCodeContract {
             .widthAnchor(144)
             .heightAnchor(144)
         
-        connectToDeviceLabel
-            .topAnchor(in: bluetoothImage, attribute: .bottom, padding: 30)
-            .centerX(in: self)
+        NSLayoutConstraint.activate([
+            connectToDeviceLabel.topAnchor.constraint(equalTo: bluetoothImage.bottomAnchor, constant: 30),
+            connectToDeviceLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: connectToDeviceLabel.bottomAnchor, constant: 15),
+            tableView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5),
+            tableView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5),
+            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
+
+
+        ])
+//        connectToDeviceLabel
         
-        tableView
-            .topAnchor(in: connectToDeviceLabel, attribute: .bottom, padding: 15)
-            .leftAnchor(in: self, padding: 5)
-            .rightAnchor(in: self, padding: 5)
-            .bottomAnchor(in: self, padding: 15)
+//            .topAnchor(in: bluetoothImage, attribute: .bottom, padding: 30)
+//            .centerX(in: self)
+//
+//        tableView
+//            .topAnchor(in: connectToDeviceLabel, attribute: .bottom, padding: 15)
+//            .leftAnchor(in: self, padding: 5)
+//            .rightAnchor(in: self, padding: 5)
+//            .bottomAnchor(in: self, padding: 15)
     }
     
     func setupConfiguration() {
