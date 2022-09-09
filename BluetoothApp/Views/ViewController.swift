@@ -17,20 +17,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getActionButton()
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+        self.centralManager?.delegate = self
     }
 
     override func loadView() {
         super.loadView()
         view = rootView
-    }
-    
-    func getActionButton() {
-        rootView.actionConnect = { [ weak self ] in
-            self?.rootView.connectButton.loadingIndicator(show: true)
-            self?.centralManager = CBCentralManager(delegate: self, queue: nil)
-            self?.centralManager?.delegate = self
-        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -72,23 +65,24 @@ extension ViewController: CBCentralManagerDelegate {
         if peripheral.identifier.uuidString == "3C9C13BB-23BF-46FA-265F-36BA31B60DCB"{
             /// Atribui ao o periferico selecionado
             self.peripheral = peripheral
-
+            
+//            rootView.connectButton.loadingIndicator(show: true)
+            
             ///Conecta com o disposivo
             self.centralManager?.connect(self.peripheral ?? peripheral)
+        } else {
+            showAlert(title: "Atenção", messsage: "Houve um erro")
         }
+        self.centralManager?.stopScan()
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         guard let namePeripheral = peripheral.name else { return }
 
-        rootView.connectedToLabel.text = "Conectado a: \(namePeripheral)"
         showAlert(title: "Parabéns", messsage: "Dispositivo foi conectado com sucesso!!")
-        rootView.connectButton.loadingIndicator(show: false)
-        self.centralManager?.stopScan()
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        rootView.connectedToLabel.text = ""
         showAlert(title: "Atenção", messsage: "Dispositivo foi desconectado")
         self.startScanning()
         startSong(id: 1005)
