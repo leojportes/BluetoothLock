@@ -99,7 +99,7 @@ extension ViewController: CBCentralManagerDelegate {
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 
-        let doesNotContainPeripheral = rootView.peripherics.map(\.name).doesNotContain(peripheral.name ?? "")
+        let doesNotContainPeripheral = rootView.peripherics.map(\.uuid).doesNotContain(peripheral.identifier.uuidString)
         
         // Se o objeto requisitado pelo scan ainda não existir na lista da view "rootView.peripherics" ...
         // ... o item será adicionado na struct "PeripheralModel".
