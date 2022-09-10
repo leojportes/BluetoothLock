@@ -29,6 +29,9 @@
 		C03F503928C1C1E800A0C35C /* ViewCodeContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */; };
 		C03F503C28C1C22600A0C35C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F503B28C1C22600A0C35C /* HomeView.swift */; };
 		C0C2372E28CC25D5004F48E2 /* Array+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2372D28CC25D5004F48E2 /* Array+Ext.swift */; };
+		C0C2373028CD05F1004F48E2 /* CustomHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2372F28CD05F1004F48E2 /* CustomHeader.swift */; };
+		C0C2373328CD0650004F48E2 /* ConnectedPeripheralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2373228CD0650004F48E2 /* ConnectedPeripheralModel.swift */; };
+		C0C2373728CD06B7004F48E2 /* PeripheralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2373628CD06B7004F48E2 /* PeripheralModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +59,9 @@
 		C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCodeContract.swift; sourceTree = "<group>"; };
 		C03F503B28C1C22600A0C35C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C0C2372D28CC25D5004F48E2 /* Array+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ext.swift"; sourceTree = "<group>"; };
+		C0C2372F28CD05F1004F48E2 /* CustomHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeader.swift; sourceTree = "<group>"; };
+		C0C2373228CD0650004F48E2 /* ConnectedPeripheralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedPeripheralModel.swift; sourceTree = "<group>"; };
+		C0C2373628CD06B7004F48E2 /* PeripheralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +94,7 @@
 		C03F4E3A28C1BA8100A0C35C /* BluetoothApp */ = {
 			isa = PBXGroup;
 			children = (
+				C0C2373128CD063E004F48E2 /* Model */,
 				C03F503A28C1C20A00A0C35C /* Views */,
 				C03F501328C1C1E800A0C35C /* Extensions */,
 				C03F501D28C1C1E800A0C35C /* Helpers */,
@@ -143,8 +150,18 @@
 				C03F4E3F28C1BA8100A0C35C /* ViewController.swift */,
 				C03F503B28C1C22600A0C35C /* HomeView.swift */,
 				521EE5C228CBD6A7002D2814 /* CustomCell.swift */,
+				C0C2372F28CD05F1004F48E2 /* CustomHeader.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		C0C2373128CD063E004F48E2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C0C2373228CD0650004F48E2 /* ConnectedPeripheralModel.swift */,
+				C0C2373628CD06B7004F48E2 /* PeripheralModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,6 +235,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C03F502F28C1C1E800A0C35C /* Weakify+Ext.swift in Sources */,
+				C0C2373328CD0650004F48E2 /* ConnectedPeripheralModel.swift in Sources */,
+				C0C2373028CD05F1004F48E2 /* CustomHeader.swift in Sources */,
 				C03F502B28C1C1E800A0C35C /* UIView+Extensions.swift in Sources */,
 				C03F503728C1C1E800A0C35C /* ActionTypealias.swift in Sources */,
 				C03F502A28C1C1E800A0C35C /* UIButton+Extensions.swift in Sources */,
@@ -231,6 +250,7 @@
 				C03F503128C1C1E800A0C35C /* UIView+SafeAreaAnchors.swift in Sources */,
 				C03F4E3C28C1BA8100A0C35C /* AppDelegate.swift in Sources */,
 				C03F503028C1C1E800A0C35C /* UITextField+Extensions.swift in Sources */,
+				C0C2373728CD06B7004F48E2 /* PeripheralModel.swift in Sources */,
 				C03F503328C1C1E800A0C35C /* AutoLayoutOption.swift in Sources */,
 				C03F4E3E28C1BA8100A0C35C /* SceneDelegate.swift in Sources */,
 				C03F503228C1C1E800A0C35C /* NSLayoutDimension+Extension.swift in Sources */,

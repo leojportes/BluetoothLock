@@ -19,7 +19,16 @@ final class HomeView: UIView {
             tableView.reloadData()
         }
     }
-    
+
+    var connectedValue: ConnectedPeripheralModel = .init(name: "Nenhum", uuid: "") {
+        didSet {
+            tableView.reloadData()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                UIAlertController.findCurrentController()?.dismiss(animated: true)
+            }
+        }
+    }
+
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         tableView.refreshControl = UIRefreshControl()
@@ -43,6 +52,7 @@ final class HomeView: UIView {
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.register(CustomCell.self, forCellReuseIdentifier: "cell")
+        table.register(CustomHeader.self, forHeaderFooterViewReuseIdentifier: "CustomHeader")
         table.translatesAutoresizingMaskIntoConstraints = false
         table.backgroundColor = .clear
         table.separatorStyle = .none
@@ -102,7 +112,6 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
         let item = peripherics[indexPath.row]
         let rssiItem = item.rssi
-          
 
         cell.setup(
             name: item.name,
@@ -117,9 +126,22 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
         didSelectPeripheral?(indexPath)
     }
     
-    
-    // TEM QUE AJUSTAR ESSA PARTE
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Conecte-se a um dispositivo"
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "CustomHeader") as! CustomHeader
+        if connectedValue.name != "Nenhum"{
+            headerView.peripheralConnectedLabel.textColor = .systemGreen
+            headerView.uuidConnectedLabel.text = "uuid: \(connectedValue.uuid)"
+        } else {
+            headerView.peripheralConnectedLabel.textColor = .gray
+            headerView.uuidConnectedLabel.text = "\(connectedValue.uuid)"
+        }
+        headerView.peripheralConnectedLabel.text = connectedValue.name
+        return headerView
     }
+
+    // Tamanho em altura da Headerview `CustomHeader`.
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        UITableView.automaticDimension
+    }
+
 }

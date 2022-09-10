@@ -9,25 +9,6 @@ import UIKit
 import CoreBluetooth
 import AVFoundation
 
-// Struct que é populada na linha 103, conforme o response recebido do scan.
-// Posteriormente daria pra mover ela para um arquivo separado.
-struct PeripheralModel {
-      let name: String
-      let uuid: String
-      let rssi: String
-      let peripheral: CBPeripheral
-
-      init(name: String, uuid: String, rssi: String, peripheral: CBPeripheral) {
-          let rssi = rssi
-              .replacingOccurrences(of: "[", with: "")
-              .replacingOccurrences(of: "]", with: "")
-          self.name = name
-          self.uuid = uuid
-          self.rssi = rssi
-          self.peripheral = peripheral
-      }
-}
-
 class ViewController: UIViewController {
 
     private var centralManager: CBCentralManager?
@@ -39,17 +20,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
         self.centralManager?.delegate = self
+        self.showPowerOffAlert()
         self.startScanning()
         self.rootView.didPullRefresh = pullRefresh
-    }
-    
-    // Ao fazer o pull na tableView, é feito o scan novamente, e após 5 segundos, o activity da tableView é parado.
-    private func pullRefresh() {
-        self.startScanning()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.rootView.tableView.refreshControl?.endRefreshing()
-            self.rootView.tableView.reloadData()
-        }
     }
 
     override func loadView() {
@@ -61,6 +34,7 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    // Limpa toda a lista e começa escaneando novamente.
     func startScanning() {
             self.rootView.peripherics.removeAll()
             if let central = self.centralManager {
@@ -75,6 +49,27 @@ class ViewController: UIViewController {
                 )
             }
     }
+    
+    // Ao fazer o pull na tableView, é feito o scan novamente, e após 5 segundos, o activity da tableView é parado.
+    private func pullRefresh() {
+        self.showPowerOffAlert()
+        self.startScanning()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.rootView.tableView.refreshControl?.endRefreshing()
+            self.rootView.tableView.reloadData()
+        }
+    }
+    
+    // Mostra o alert avisando que o bluetooth está desligado.
+    private func showPowerOffAlert() {
+        if centralManager?.state == .poweredOff {
+            self.showAlert(
+                title: "Bluetooth desligado!",
+                messsage: "Habilite no menu do seu iPhone.",
+                hasButton: true
+            )
+        }
+    }
 
 }
 
@@ -85,6 +80,7 @@ extension ViewController: CBCentralManagerDelegate {
         switch (central.state) {
         case .poweredOff:
             print("-> Bluetooth is powered off")
+            rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
         case .unknown: print("-> Bluetooth is unknown")
         case .resetting: print("-> Bluetooth resetting")
         case .unsupported: print("-> Bluetooth unsupported")
@@ -117,6 +113,7 @@ extension ViewController: CBCentralManagerDelegate {
         // Ao clicar em cada celula, recuperamos o indexpath clicado pela closure 'didSelectPeripheral' e fazemos a conexão do ...
         // bluetooth pelo método "self?.connectBLE"
         self.rootView.didSelectPeripheral = { [ weak self ] indexpath in
+            self?.showPowerOffAlert()
             self?.connectBLE(indexPath: indexpath.item, item: self?.rootView.peripherics ?? [], CBperipheral: peripheral)
         }
         
@@ -127,34 +124,38 @@ extension ViewController: CBCentralManagerDelegate {
         let periphericName = self.rootView.peripherics[indexPath].name
         
         switch CBperipheral.state {
-        case .disconnected:
-            self.showAlertLoading(title: "Desconectado!", peripheral: periphericName)
+        case .disconnected: print("Desconectado")
         case .connecting:
             self.centralManager?.stopScan()
             self.showAlertLoading(title: "Conectando...", peripheral: periphericName)
         case .connected:
             self.centralManager?.stopScan()
-            self.showAlertLoading(title: "Conectado!", peripheral: periphericName)
+//            self.showAlertLoading(title: "Dispositivo conectado!", peripheral: periphericName, isOnActivity: false)
         case .disconnecting:
             self.centralManager?.stopScan()
             self.showAlertLoading(title: "Desconectando...", peripheral: periphericName)
         @unknown default:
             break
         }
-        print(item[indexPath])
+        print("Item clicado: ", item[indexPath])
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        self.showAlert(title: "Dispositivo conectado")
+        self.showAlert(title: "Dispositivo conectado!")
+        rootView.connectedValue = ConnectedPeripheralModel(
+            name: peripheral.name?.description ?? "Desconhecido",
+            uuid: peripheral.identifier.uuidString
+        )
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        self.showAlert(title: "Dispositivo desconectado")
+        self.showAlert(title: "Dispositivo desconectado!")
+        rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
         startSong(id: 1005)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        self.showAlert(title: "Conexao falhou")
+        self.showAlert(title: "Conexão falhou")
     }
 
     private func startSong(id: UInt32) {
@@ -168,4 +169,3 @@ extension ViewController: CBPeripheralDelegate {
 //        print(service.peripheral?.name)
     }
 }
-
