@@ -109,10 +109,10 @@ extension HomeView: ViewCodeContract {
         ])
 
         lastsConnectedButton
-            .leftAnchor(in: self, padding: 20)
-            .rightAnchor(in: self, padding: 20)
+            .leftAnchor(in: self, padding: 10)
+            .rightAnchor(in: self, padding: 10)
             .bottomAnchor(in: self, padding: 20)
-            .heightAnchor(40)
+            .heightAnchor(45)
     }
     
     func setupConfiguration() {

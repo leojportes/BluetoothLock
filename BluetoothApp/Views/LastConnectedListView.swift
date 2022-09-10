@@ -93,8 +93,7 @@ extension LastConnectedListView: ViewCodeContract {
         titleLabel
             .centerX(in: view, layoutOption: .useSafeArea)
             .topAnchor(in: view, padding: 15)
-        
-        
+
         removeAllButton
             .topAnchor(in: view, padding: 50)
             .rightAnchor(in: view, padding: 15)

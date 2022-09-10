@@ -37,11 +37,22 @@ class CustomHeader: UITableViewHeaderFooterView, ViewCodeContract {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    lazy var connectAnPeripheralLabel: UILabel = {
+        let label = UILabel()
+        label.font = .boldSystemFont(ofSize: 14)
+        label.textColor = .gray
+        label.text = "Conecte-se a um dispositivo"
+        label.numberOfLines = .zero
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     func setupHierarchy() {
         addSubview(label)
         addSubview(peripheralConnectedLabel)
         addSubview(uuidConnectedLabel)
+        addSubview(connectAnPeripheralLabel)
     }
 
     func setupConstraints() {
@@ -57,12 +68,17 @@ class CustomHeader: UITableViewHeaderFooterView, ViewCodeContract {
         uuidConnectedLabel
             .topAnchor(in: peripheralConnectedLabel, attribute: .bottom, padding: 5)
             .leftAnchor(in: self, padding: 5)
+        
+        connectAnPeripheralLabel
+            .topAnchor(in: uuidConnectedLabel, attribute: .bottom, padding: 5)
+            .leftAnchor(in: self, padding: 5)
             .bottomAnchor(in: self, padding: 2)
      
     }
 
     override init(reuseIdentifier: String?) {
         super .init(reuseIdentifier: reuseIdentifier)
+        self.backgroundColor = .clear
         setupView()
     }
 
