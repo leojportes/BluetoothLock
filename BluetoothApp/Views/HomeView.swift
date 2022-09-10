@@ -11,7 +11,19 @@ import CoreBluetooth
 
 final class HomeView: UIView {
     
-    var clickInCell: ((IndexPath) -> Void)?
+    var didSelectPeripheral: ((IndexPath) -> Void)?
+    
+    var items: [CBPeripheral] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
+    var rssi: [NSNumber] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -31,7 +43,7 @@ final class HomeView: UIView {
         return imagem
     }()
     
-    private lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let table = UITableView()
         table.register(CustomCell.self, forCellReuseIdentifier: "cell")
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +52,12 @@ final class HomeView: UIView {
         table.delegate = self
         table.dataSource = self
         return table
+    }()
+    
+    private lazy var headerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
 }
@@ -60,13 +78,10 @@ extension HomeView: ViewCodeContract {
             .heightAnchor(144)
         
         NSLayoutConstraint.activate([
-            
             tableView.topAnchor.constraint(equalTo: bluetoothImage.bottomAnchor, constant: 15),
             tableView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5),
             tableView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
-
-
         ])
     }
     
@@ -83,17 +98,18 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
-//        let item = items[indexPath.row]
+        let item = items[indexPath.row]
+        cell.setup(name: item.name ?? "Desconhecido", uuid: item.identifier.uuidString, rssi: rssi.description)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        clickInCell?(indexPath)
+        didSelectPeripheral?(indexPath)
     }
     
     

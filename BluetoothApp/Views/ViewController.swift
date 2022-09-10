@@ -19,7 +19,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
         self.centralManager?.delegate = self
-        getActionsView()
     }
 
     override func loadView() {
@@ -27,23 +26,31 @@ class ViewController: UIViewController {
         view = rootView
     }
     
-    func getActionsView() {
-        rootView.clickInCell = { [ weak self ] indexs in
-            print(indexs)
-            self?.showAlertLoading()
-        }
-    }
+//    func getActionsView() {
+//        rootView.didSelectPeripheral = { [ weak self ] indexs in
+//
+////            self?.showAlertLoading()
+//        }
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
     func startScanning() {
-      if let central = centralManager {
-        central.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey:false, CBConnectPeripheralOptionNotifyOnConnectionKey: false, CBConnectPeripheralOptionNotifyOnDisconnectionKey: false, CBConnectPeripheralOptionNotifyOnNotificationKey: false])
-      }
+        if let central = centralManager {
+            central.scanForPeripherals(
+                withServices: nil,
+                options: [
+                    CBCentralManagerScanOptionAllowDuplicatesKey: false,
+                    CBConnectPeripheralOptionNotifyOnConnectionKey: false,
+                    CBConnectPeripheralOptionNotifyOnDisconnectionKey: false,
+                    CBConnectPeripheralOptionNotifyOnNotificationKey: false
+                ]
+            )
+        }
     }
-    
+
 }
 
 extension ViewController: CBCentralManagerDelegate {
@@ -67,37 +74,62 @@ extension ViewController: CBCentralManagerDelegate {
         }
         print(consoleMsg)
     }
-    
+
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-        if peripheral.identifier.uuidString == "3C9C13BB-23BF-46FA-265F-36BA31B60DCB"{
-            /// Atribui ao o periferico selecionado
-            self.peripheral = peripheral
-            
-//            rootView.connectButton.loadingIndicator(show: true)
-            
-            ///Conecta com o disposivo
-            self.centralManager?.connect(self.peripheral ?? peripheral)
-        } else {
-            showAlert(title: "Atenção", messsage: "Houve um erro")
+
+        let doesNotContainPeripheral = rootView.items.map(\.name?.description).doesNotContain(peripheral.name?.description)
+        let doesNotContainRSSI = rootView.rssi.map(\.stringValue).doesNotContain(RSSI.stringValue)
+
+        if doesNotContainPeripheral && doesNotContainRSSI {
+            rootView.items.append(peripheral)
+            rootView.rssi.removeAll()
+            rootView.rssi.append(RSSI)
         }
-        self.centralManager?.stopScan()
+
+        self.rootView.didSelectPeripheral = { [ weak self ] indexs in
+            self?.conectBLE(indexPath: indexs.item, peripheral: self?.rootView.items ?? [])
+            
+            switch peripheral.state {
+            case .disconnected:
+                self?.showAlertLoading(title: "Desconectado!", peripheral: self?.rootView.items[indexs.item].name ?? "" )
+            case .connecting:
+                self?.showAlertLoading(title: "Conectando...!", peripheral: self?.rootView.items[indexs.item].name ?? "" )
+            case .connected:
+                self?.showAlertLoading(title: "Conectado!", peripheral: self?.rootView.items[indexs.item].name ?? "" )
+            case .disconnecting:
+                self?.showAlertLoading(title: "Desconectando...", peripheral: self?.rootView.items[indexs.item].name ?? "" )
+            @unknown default:
+                break
+            }
+        }
+        
+       
+        
+//
+        
+        
+        
+    }
+    
+    func conectBLE(indexPath: Int, peripheral: [CBPeripheral]) {
+        self.centralManager?.connect(peripheral[indexPath])
+        print(peripheral[indexPath])
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        guard let namePeripheral = peripheral.name else { return }
+        // guard let namePeripheral = peripheral.name else { return }
 
-        showAlert(title: "Parabéns", messsage: "Dispositivo foi conectado com sucesso!!")
+        self.showAlert(title: "Dispositivo conectado")
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        showAlert(title: "Atenção", messsage: "Dispositivo foi desconectado")
+        self.showAlert(title: "Dispositivo desconectado")
         self.startScanning()
         startSong(id: 1005)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        showAlert(title: "Atenção", messsage: "Conexao falhou")
+        self.showAlert(title: "Conexao falhou")
     }
 
     private func startSong(id: UInt32) {

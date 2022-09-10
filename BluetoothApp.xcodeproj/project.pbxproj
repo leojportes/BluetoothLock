@@ -28,6 +28,7 @@
 		C03F503828C1C1E800A0C35C /* UIView+AxisAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502528C1C1E800A0C35C /* UIView+AxisAttribute.swift */; };
 		C03F503928C1C1E800A0C35C /* ViewCodeContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */; };
 		C03F503C28C1C22600A0C35C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F503B28C1C22600A0C35C /* HomeView.swift */; };
+		C0C2372E28CC25D5004F48E2 /* Array+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2372D28CC25D5004F48E2 /* Array+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		C03F502528C1C1E800A0C35C /* UIView+AxisAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+AxisAttribute.swift"; sourceTree = "<group>"; };
 		C03F502728C1C1E800A0C35C /* ViewCodeContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCodeContract.swift; sourceTree = "<group>"; };
 		C03F503B28C1C22600A0C35C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C0C2372D28CC25D5004F48E2 /* Array+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				C03F501728C1C1E800A0C35C /* UIView+Extensions.swift */,
 				C03F501B28C1C1E800A0C35C /* Weakify+Ext.swift */,
 				C03F501C28C1C1E800A0C35C /* UITextField+Extensions.swift */,
+				C0C2372D28CC25D5004F48E2 /* Array+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				C03F503328C1C1E800A0C35C /* AutoLayoutOption.swift in Sources */,
 				C03F4E3E28C1BA8100A0C35C /* SceneDelegate.swift in Sources */,
 				C03F503228C1C1E800A0C35C /* NSLayoutDimension+Extension.swift in Sources */,
+				C0C2372E28CC25D5004F48E2 /* Array+Ext.swift in Sources */,
 				C03F503628C1C1E800A0C35C /* UIView+RawAnchors.swift in Sources */,
 				C03F503528C1C1E800A0C35C /* Padding.swift in Sources */,
 			);
@@ -371,7 +375,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4YZBY4QHWG;
+				DEVELOPMENT_TEAM = B26UWH9L8Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BluetoothApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "BluetoothApp location use";
@@ -386,7 +390,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = renilson;
+				PRODUCT_BUNDLE_IDENTIFIER = jportes.BluetoothApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -401,7 +405,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4YZBY4QHWG;
+				DEVELOPMENT_TEAM = B26UWH9L8Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BluetoothApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "BluetoothApp location use";
@@ -416,7 +420,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = renilson;
+				PRODUCT_BUNDLE_IDENTIFIER = jportes.BluetoothApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

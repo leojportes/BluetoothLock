@@ -8,26 +8,30 @@
 import UIKit
 
 extension UIViewController {
-     func showAlert(title: String = "Funcionalidade não disponível!", messsage: String = "Estamos trabalhando nisso.") {
+     func showAlert(title: String = "Funcionalidade não disponível!", messsage: String = "") {
         let alert = UIAlertController(title: title, message: messsage, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Ok", style: .cancel)
         alert.addAction(cancel)
         self.present(alert, animated: true, completion: nil)
     }
     
-    func showAlertLoading() {
-        let alert = UIAlertController(title: "conectando...", message: nil, preferredStyle: .alert)
+    func showAlertLoading(title: String = "Titulo", peripheral: String) {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
-        let activityIndicator = UIActivityIndicatorView(style: .gray)
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.isUserInteractionEnabled = false
         activityIndicator.startAnimating()
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "[TV] Samsung AU770050 TV"
-        
-        let cancel = UIAlertAction(title: "cancelar", style: .cancel)
+        if peripheral == nil {
+            label.text = "Desconhecido"
+        } else {
+            label.text = peripheral
+        }
+        print(peripheral)
+        let cancel = UIAlertAction(title: "Ok", style: .cancel)
         
         alert.view.tintColor = .black
         alert.addAction(cancel)

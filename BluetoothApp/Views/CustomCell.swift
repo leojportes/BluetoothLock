@@ -83,5 +83,9 @@ extension CustomCell: ViewCodeContract {
             .bottomAnchor(in: container, attribute: .bottom, padding: 10)
     }
     
-    
+    func setup(name: String, uuid: String, rssi: String) {
+        namePeripheral.text = name
+        uuidPeripheral.text = uuid
+        rssiPeripheral.text = rssi
+    }
 }
