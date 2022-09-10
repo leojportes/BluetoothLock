@@ -25,7 +25,7 @@ extension UIViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        if peripheral == nil {
+        if peripheral.isEmpty {
             label.text = "Desconhecido"
         } else {
             label.text = peripheral
