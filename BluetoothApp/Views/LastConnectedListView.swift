@@ -61,17 +61,16 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return peripherics.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
         cell.selectionStyle = .none
         let item = peripherics[indexPath.row]
-        let rssiItem = item.rssi
 
         cell.setup(
-            name: item.name,
+            name: "Dispositivo: \(item.name)",
             uuid: "uuid: \(item.uuid)",
-            rssi: "rssi: \(rssiItem)"
+            rssi: ""
         )
 
         return cell

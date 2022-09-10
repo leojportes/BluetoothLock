@@ -31,7 +31,7 @@ class CustomHeader: UITableViewHeaderFooterView, ViewCodeContract {
     
     lazy var uuidConnectedLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 14)
+        label.font = .boldSystemFont(ofSize: 12)
         label.textColor = .gray
         label.numberOfLines = .zero
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,8 +40,8 @@ class CustomHeader: UITableViewHeaderFooterView, ViewCodeContract {
     
     lazy var connectAnPeripheralLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 14)
-        label.textColor = .gray
+        label.font = .boldSystemFont(ofSize: 16)
+        label.textColor = .darkGray
         label.text = "Conecte-se a um dispositivo"
         label.numberOfLines = .zero
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +70,7 @@ class CustomHeader: UITableViewHeaderFooterView, ViewCodeContract {
             .leftAnchor(in: self, padding: 5)
         
         connectAnPeripheralLabel
-            .topAnchor(in: uuidConnectedLabel, attribute: .bottom, padding: 5)
+            .topAnchor(in: uuidConnectedLabel, attribute: .bottom, padding: 10)
             .leftAnchor(in: self, padding: 5)
             .bottomAnchor(in: self, padding: 2)
      
