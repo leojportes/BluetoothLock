@@ -12,19 +12,8 @@ import CoreBluetooth
 final class HomeView: UIView {
     
     var didSelectPeripheral: ((IndexPath) -> Void)?
-    
-//    var items: [CBPeripheral] = [] {
-//        didSet {
-//            tableView.reloadData()
-//        }
-//    }
-//
-//    var rssi: [NSNumber] = [] {
-//        didSet {
-//            tableView.reloadData()
-//        }
-//    }
-    
+    var didPullRefresh: (() -> Void)?
+
     var peripherics: [PeripheralModel] = [] {
         didSet {
             tableView.reloadData()
@@ -33,6 +22,8 @@ final class HomeView: UIView {
     
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(callPullToRefresh), for: .valueChanged)
         setupView()
     }
     
@@ -58,12 +49,6 @@ final class HomeView: UIView {
         table.delegate = self
         table.dataSource = self
         return table
-    }()
-    
-    private lazy var headerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
 
 }
@@ -94,6 +79,12 @@ extension HomeView: ViewCodeContract {
     func setupConfiguration() {
         self.backgroundColor = .white
     }
+    
+    // MARK: - Actions
+    @objc private func callPullToRefresh() {
+        self.didPullRefresh?()
+    }
+    
 }
 
 // MARK: - Delegate and DataSource tableview

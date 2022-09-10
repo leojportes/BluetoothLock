@@ -22,6 +22,12 @@ class CustomCell: UITableViewCell {
     lazy var container: UIView = {
         let container = UIView()
         container.backgroundColor = .lightGray
+        container.addShadow(
+            color: UIColor.black,
+            size: CGSize(width: -3, height: 3),
+            opacity: 0.2,
+            radius: 2.0
+        )
         container.layer.cornerRadius = 15
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
@@ -64,7 +70,7 @@ extension CustomCell: ViewCodeContract {
     
     func setupConstraints() {
         container
-            .pin(toEdgesOf: self, padding: .vertical(5))
+            .pin(toEdgesOf: self, padding: .init(vertical: 5, horizontal: 5))
         
         namePeripheral
             .topAnchor(in: container, attribute: .top, padding: 10)
