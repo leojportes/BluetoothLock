@@ -9,11 +9,29 @@ import UIKit
 import CoreBluetooth
 import AVFoundation
 
+struct PeripheralModel {
+      let name: String
+      let uuid: String
+      let rssi: String
+      let peripheral: CBPeripheral
+
+      init(name: String, uuid: String, rssi: String, peripheral: CBPeripheral) {
+          let rssi = rssi
+              .replacingOccurrences(of: "[", with: "")
+              .replacingOccurrences(of: "]", with: "")
+          self.name = name
+          self.uuid = uuid
+          self.rssi = rssi
+          self.peripheral = peripheral
+      }
+}
+
 class ViewController: UIViewController {
 
     private var centralManager: CBCentralManager?
     private lazy var rootView = HomeView()
     private var peripheral: CBPeripheral?
+    var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,28 +44,28 @@ class ViewController: UIViewController {
         view = rootView
     }
     
-//    func getActionsView() {
-//        rootView.didSelectPeripheral = { [ weak self ] indexs in
-//
-////            self?.showAlertLoading()
-//        }
-//    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    // A cada 7 segundos, é esvaziada a lista de items de periféricos e de rssi e feito o scan novamente.
+    // a propriedade self.timer é chamada em alguns momentos que não é para fazer o request novamente.
+    // Para parar o request, é usado self.timer.invalidate(), assim garantimos que quando está `conectando...`, não fique buscando novos requests e atualizando a lista.
     func startScanning() {
-        if let central = centralManager {
-            central.scanForPeripherals(
-                withServices: nil,
-                options: [
-                    CBCentralManagerScanOptionAllowDuplicatesKey: false,
-                    CBConnectPeripheralOptionNotifyOnConnectionKey: false,
-                    CBConnectPeripheralOptionNotifyOnDisconnectionKey: false,
-                    CBConnectPeripheralOptionNotifyOnNotificationKey: false
-                ]
-            )
+        self.timer = Timer.scheduledTimer(withTimeInterval: 7, repeats: true) { _ in
+            self.rootView.peripherics.removeAll()
+            if let central = self.centralManager {
+                central.scanForPeripherals(
+                    withServices: nil,
+                    options: [
+                        CBCentralManagerScanOptionAllowDuplicatesKey: false,
+                        CBConnectPeripheralOptionNotifyOnConnectionKey: false,
+                        CBConnectPeripheralOptionNotifyOnDisconnectionKey: false,
+                        CBConnectPeripheralOptionNotifyOnNotificationKey: false
+                    ]
+                )
+            }
+            self.rootView.tableView.reloadData()
         }
     }
 
@@ -57,68 +75,69 @@ extension ViewController: CBCentralManagerDelegate {
     
     // MARK: - Verifica o estado do bluetooth
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        
-        var consoleMsg = ""
-        
         switch (central.state) {
-        case .poweredOff: consoleMsg = "-> Bluetooth is powered off"
-        case .unknown: consoleMsg = "-> Bluetooth is unknown"
-        case .resetting: consoleMsg = "-> Bluetooth resetting"
-        case .unsupported: consoleMsg = "-> Bluetooth unsupported"
-        case .unauthorized: consoleMsg = "-> Bluetooth unauthorized"
+        case .poweredOff:
+            print("-> Bluetooth is powered off")
+            timer?.invalidate()
+        case .unknown: print("-> Bluetooth is unknown")
+        case .resetting: print("-> Bluetooth resetting")
+        case .unsupported: print("-> Bluetooth unsupported")
+        case .unauthorized: print("-> Bluetooth unauthorized")
         case .poweredOn:
-            consoleMsg = "-> Bluetooth is powered on"
+            print("-> Bluetooth is powered on")
             startScanning()
         @unknown default:
             break
         }
-        print(consoleMsg)
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 
-        let doesNotContainPeripheral = rootView.items.map(\.name?.description).doesNotContain(peripheral.name?.description)
-        let doesNotContainRSSI = rootView.rssi.map(\.stringValue).doesNotContain(RSSI.stringValue)
+        let doesNotContainPeripheral = rootView.peripherics.map(\.name).doesNotContain(peripheral.name ?? "")
 
-        if doesNotContainPeripheral && doesNotContainRSSI {
-            rootView.items.append(peripheral)
-            rootView.rssi.removeAll()
-            rootView.rssi.append(RSSI)
+        if doesNotContainPeripheral {
+            rootView.peripherics.append(
+                PeripheralModel(
+                    name: peripheral.name?.description ?? "Desconhecido",
+                    uuid: peripheral.identifier.uuidString,
+                    rssi: RSSI.stringValue,
+                    peripheral: peripheral
+                )
+            )
         }
 
         self.rootView.didSelectPeripheral = { [ weak self ] indexs in
-            self?.conectBLE(indexPath: indexs.item, peripheral: self?.rootView.items ?? [])
-            
-            switch peripheral.state {
-            case .disconnected:
-                self?.showAlertLoading(title: "Desconectado!", peripheral: self?.rootView.items[indexs.item].name ?? "" )
-            case .connecting:
-                self?.showAlertLoading(title: "Conectando...!", peripheral: self?.rootView.items[indexs.item].name ?? "" )
-            case .connected:
-                self?.showAlertLoading(title: "Conectado!", peripheral: self?.rootView.items[indexs.item].name ?? "" )
-            case .disconnecting:
-                self?.showAlertLoading(title: "Desconectando...", peripheral: self?.rootView.items[indexs.item].name ?? "" )
-            @unknown default:
-                break
-            }
+            self?.connectBLE(indexPath: indexs.item, item: self?.rootView.peripherics ?? [], CBperipheral: peripheral)
         }
-        
-       
-        
-//
-        
-        
         
     }
     
-    func conectBLE(indexPath: Int, peripheral: [CBPeripheral]) {
-        self.centralManager?.connect(peripheral[indexPath])
-        print(peripheral[indexPath])
+    func connectBLE(indexPath: Int, item: [PeripheralModel], CBperipheral: CBPeripheral) {
+        self.centralManager?.connect(item[indexPath].peripheral)
+        let periphericName = self.rootView.peripherics[indexPath].name
+        
+        switch CBperipheral.state {
+        case .disconnected:
+            self.startScanning()
+            self.showAlertLoading(title: "Desconectado!", peripheral: periphericName)
+        case .connecting:
+            self.centralManager?.stopScan()
+            self.timer?.invalidate()
+            self.showAlertLoading(title: "Conectando...", peripheral: periphericName)
+        case .connected:
+            self.centralManager?.stopScan()
+            self.showAlertLoading(title: "Conectado!", peripheral: periphericName)
+        case .disconnecting:
+            self.centralManager?.stopScan()
+            self.timer?.invalidate()
+            self.showAlertLoading(title: "Desconectando...", peripheral: periphericName)
+        @unknown default:
+            break
+        }
+        print(item[indexPath])
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        // guard let namePeripheral = peripheral.name else { return }
-
         self.showAlert(title: "Dispositivo conectado")
     }
     
@@ -140,7 +159,7 @@ extension ViewController: CBCentralManagerDelegate {
 
 extension ViewController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print(service.peripheral?.name)
+//        print(service.peripheral?.name)
     }
 }
 

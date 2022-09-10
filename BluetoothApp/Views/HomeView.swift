@@ -13,13 +13,19 @@ final class HomeView: UIView {
     
     var didSelectPeripheral: ((IndexPath) -> Void)?
     
-    var items: [CBPeripheral] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-
-    var rssi: [NSNumber] = [] {
+//    var items: [CBPeripheral] = [] {
+//        didSet {
+//            tableView.reloadData()
+//        }
+//    }
+//
+//    var rssi: [NSNumber] = [] {
+//        didSet {
+//            tableView.reloadData()
+//        }
+//    }
+    
+    var peripherics: [PeripheralModel] = [] {
         didSet {
             tableView.reloadData()
         }
@@ -98,13 +104,21 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return peripherics.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
-        let item = items[indexPath.row]
-        cell.setup(name: item.name ?? "Desconhecido", uuid: item.identifier.uuidString, rssi: rssi.description)
+        let item = peripherics[indexPath.row]
+        let rssiItem = item.rssi
+          
+
+        cell.setup(
+            name: item.name,
+            uuid: "uuid: \(item.uuid)",
+            rssi: "rssi: \(rssiItem)"
+        )
+
         return cell
     }
     

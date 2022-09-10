@@ -21,8 +21,8 @@ class CustomCell: UITableViewCell {
     // MARK: View Code
     lazy var container: UIView = {
         let container = UIView()
-        container.backgroundColor = .systemGray
-        container.layer.cornerRadius = 10
+        container.backgroundColor = .lightGray
+        container.layer.cornerRadius = 15
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
     }()
