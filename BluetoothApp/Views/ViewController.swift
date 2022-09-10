@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     private var centralManager: CBCentralManager?
     private lazy var rootView = HomeView()
     private var peripheral: CBPeripheral?
+    private var lastConnected: [PeripheralModel] = []
     var timer: Timer?
     
     override func viewDidLoad() {
@@ -23,6 +24,7 @@ class ViewController: UIViewController {
         self.showPowerOffAlert()
         self.startScanning()
         self.rootView.didPullRefresh = pullRefresh
+        self.rootView.didTapLastConnectedAction = openLastsConnected
     }
 
     override func loadView() {
@@ -69,6 +71,27 @@ class ViewController: UIViewController {
                 hasButton: true
             )
         }
+    }
+    
+    private func openLastsConnected() {
+        if self.lastConnected.isEmpty {
+            showAlert(title: "Histórico vazio", messsage: "", hasButton: true)
+        } else {
+            let controller = LastConnectedListView()
+            controller.didTapRemoveAllAction = weakify { weakSelf in
+                weakSelf.lastConnected.removeAll()
+                controller.peripherics = self.lastConnected
+                controller.tableView.reloadData()
+            }
+            controller.peripherics = self.lastConnected
+            controller.tableView.reloadData()
+            controller.modalPresentationStyle = .pageSheet
+            present(controller, animated: true)
+        }
+    }
+    
+    private func didTapRemoveAll() {
+      
     }
 
 }
@@ -145,6 +168,15 @@ extension ViewController: CBCentralManagerDelegate {
         rootView.connectedValue = ConnectedPeripheralModel(
             name: peripheral.name?.description ?? "Desconhecido",
             uuid: peripheral.identifier.uuidString
+        )
+        // Adiciona os items para a tela de últimos conectados
+        self.lastConnected.append(
+            PeripheralModel(
+                name: peripheral.name?.description ?? "Desconhecido",
+                uuid: peripheral.identifier.uuidString,
+                rssi: "",
+                peripheral: peripheral
+            )
         )
     }
     

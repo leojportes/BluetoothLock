@@ -32,6 +32,7 @@
 		C0C2373028CD05F1004F48E2 /* CustomHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2372F28CD05F1004F48E2 /* CustomHeader.swift */; };
 		C0C2373328CD0650004F48E2 /* ConnectedPeripheralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2373228CD0650004F48E2 /* ConnectedPeripheralModel.swift */; };
 		C0C2373728CD06B7004F48E2 /* PeripheralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2373628CD06B7004F48E2 /* PeripheralModel.swift */; };
+		C0C2373B28CD0D52004F48E2 /* LastConnectedListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C2373A28CD0D52004F48E2 /* LastConnectedListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		C0C2372F28CD05F1004F48E2 /* CustomHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeader.swift; sourceTree = "<group>"; };
 		C0C2373228CD0650004F48E2 /* ConnectedPeripheralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedPeripheralModel.swift; sourceTree = "<group>"; };
 		C0C2373628CD06B7004F48E2 /* PeripheralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralModel.swift; sourceTree = "<group>"; };
+		C0C2373A28CD0D52004F48E2 /* LastConnectedListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastConnectedListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 				C03F503B28C1C22600A0C35C /* HomeView.swift */,
 				521EE5C228CBD6A7002D2814 /* CustomCell.swift */,
 				C0C2372F28CD05F1004F48E2 /* CustomHeader.swift */,
+				C0C2373A28CD0D52004F48E2 /* LastConnectedListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				C03F503328C1C1E800A0C35C /* AutoLayoutOption.swift in Sources */,
 				C03F4E3E28C1BA8100A0C35C /* SceneDelegate.swift in Sources */,
 				C03F503228C1C1E800A0C35C /* NSLayoutDimension+Extension.swift in Sources */,
+				C0C2373B28CD0D52004F48E2 /* LastConnectedListView.swift in Sources */,
 				C0C2372E28CC25D5004F48E2 /* Array+Ext.swift in Sources */,
 				C03F503628C1C1E800A0C35C /* UIView+RawAnchors.swift in Sources */,
 				C03F503528C1C1E800A0C35C /* Padding.swift in Sources */,

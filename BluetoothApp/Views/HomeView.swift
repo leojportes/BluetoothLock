@@ -13,6 +13,7 @@ final class HomeView: UIView {
     
     var didSelectPeripheral: ((IndexPath) -> Void)?
     var didPullRefresh: (() -> Void)?
+    var didTapLastConnectedAction: (() -> Void)?
 
     var peripherics: [PeripheralModel] = [] {
         didSet {
@@ -60,6 +61,27 @@ final class HomeView: UIView {
         table.dataSource = self
         return table
     }()
+    
+    lazy var lastsConnectedButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Últimos conectados", for: .normal)
+        button.backgroundColor = .black
+        button.roundCorners(cornerRadius: 15)
+        button.addShadow(
+            color: UIColor.black,
+            size: CGSize(width: -3, height: 3),
+            opacity: 0.2,
+            radius: 2.0
+        )
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(nil, action: #selector(didTapLastConnected), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func didTapLastConnected() {
+        self.didTapLastConnectedAction?()
+    }
 
 }
 
@@ -68,6 +90,7 @@ extension HomeView: ViewCodeContract {
     func setupHierarchy() {
         addSubview(bluetoothImage)
         addSubview(tableView)
+        addSubview(lastsConnectedButton)
     }
     
     func setupConstraints() {
@@ -82,8 +105,14 @@ extension HomeView: ViewCodeContract {
             tableView.topAnchor.constraint(equalTo: bluetoothImage.bottomAnchor, constant: 15),
             tableView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5),
             tableView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5),
-            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
+            tableView.bottomAnchor.constraint(equalTo: lastsConnectedButton.topAnchor, constant: -15),
         ])
+
+        lastsConnectedButton
+            .leftAnchor(in: self, padding: 20)
+            .rightAnchor(in: self, padding: 20)
+            .bottomAnchor(in: self, padding: 20)
+            .heightAnchor(40)
     }
     
     func setupConfiguration() {
@@ -110,6 +139,7 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
+        cell.selectionStyle = .none
         let item = peripherics[indexPath.row]
         let rssiItem = item.rssi
 
@@ -132,7 +162,7 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
             headerView.peripheralConnectedLabel.textColor = .systemGreen
             headerView.uuidConnectedLabel.text = "uuid: \(connectedValue.uuid)"
         } else {
-            headerView.peripheralConnectedLabel.textColor = .gray
+            headerView.peripheralConnectedLabel.textColor = .systemRed
             headerView.uuidConnectedLabel.text = "\(connectedValue.uuid)"
         }
         headerView.peripheralConnectedLabel.text = connectedValue.name
