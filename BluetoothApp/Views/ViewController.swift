@@ -137,6 +137,11 @@ extension ViewController: CBCentralManagerDelegate {
         case .poweredOn:
             print("-> Bluetooth is powered on")
             startScanning()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                if central.state != .poweredOn {
+                    UIAlertController.findCurrentController()?.dismiss(animated: true)
+                }
+            }
         @unknown default:
             break
         }
@@ -177,6 +182,9 @@ extension ViewController: CBCentralManagerDelegate {
         case .connecting:
             self.centralManager?.stopScan()
             self.showAlertLoading(title: "Conectando...", peripheral: periphericName)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8) {
+                UIAlertController.findCurrentController()?.dismiss(animated: true)
+            }
         case .connected:
             self.centralManager?.stopScan()
         case .disconnecting:
