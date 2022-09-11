@@ -21,9 +21,9 @@ class CustomCell: UITableViewCell {
     // MARK: View Code
     lazy var container: UIView = {
         let container = UIView()
-        container.backgroundColor = .lightGray
+        container.backgroundColor = .white
         container.addShadow(
-            color: UIColor.black,
+            color: UIColor.lightGray,
             size: CGSize(width: -3, height: 3),
             opacity: 0.2,
             radius: 2.0
@@ -66,6 +66,7 @@ class CustomCell: UITableViewCell {
 
 extension CustomCell: ViewCodeContract {
     func setupHierarchy() {
+        self.backgroundColor = UIColor(named: "lightGray")
         addSubview(container)
         container.addSubview(namePeripheral)
         container.addSubview(uuidPeripheral)
@@ -75,7 +76,7 @@ extension CustomCell: ViewCodeContract {
     
     func setupConstraints() {
         container
-            .pin(toEdgesOf: self, padding: .init(vertical: 5, horizontal: 5))
+            .pin(toEdgesOf: self, padding: .init(vertical: 5, horizontal: 10))
         
         namePeripheral
             .topAnchor(in: container, attribute: .top, padding: 10)

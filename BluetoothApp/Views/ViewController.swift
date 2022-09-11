@@ -28,13 +28,7 @@ class ViewController: UIViewController {
         self.rootView.didPullRefresh = pullRefresh
         self.rootView.didTapLastConnectedAction = openLastsConnected
         
-        if let data = UserDefaults.standard.object(forKey: "LastConnected") as? Data {
-            let decoder = JSONDecoder()
-            if let items = try? decoder.decode([LastPeripheralModel].self, from: data) {
-                lastConnected = items
-                print(items)
-            }
-        }
+        self.initialLastConnectedValuesFromUserDefault()
     }
 
     override func loadView() {
@@ -91,12 +85,23 @@ class ViewController: UIViewController {
             let controller = LastConnectedListView()
             // Action do botão de limpar lista na tela de histórico
             controller.didTapRemoveAllAction = weakify { weakSelf in
-                if let appDomain = Bundle.main.bundleIdentifier {
-                    UserDefaults.standard.removePersistentDomain(forName: appDomain)
+                if weakSelf.lastConnected.isEmpty {
+                    UIViewController.findCurrentController()?.showAlert(title: "Histórico já é vazio.")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        UIViewController.findCurrentController()?.dismiss(animated: true)
+                    }
+                } else {
+                    if let appDomain = Bundle.main.bundleIdentifier {
+                        UserDefaults.standard.removePersistentDomain(forName: appDomain)
+                        UIViewController.findCurrentController()?.showAlert(title: "Histórico esvaziado.")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            UIViewController.findCurrentController()?.dismiss(animated: true)
+                        }
+                    }
+                    weakSelf.lastConnected.removeAll()
+                    controller.peripherics = self.lastConnected
+                    controller.tableView.reloadData()
                 }
-                weakSelf.lastConnected.removeAll()
-                controller.peripherics = self.lastConnected
-                controller.tableView.reloadData()
             }
             controller.peripherics = self.lastConnected
             controller.tableView.reloadData()
@@ -108,15 +113,30 @@ class ViewController: UIViewController {
     // Monta a data atual da conexão para mostrar na tela de histórico
     private func makeCurrentDate() -> String {
         let date = Date()
-        let calendar = Calendar.current
+        var calendar = Calendar.current
 
+        calendar.locale = Locale(identifier: "pt_BR")
+        
         let day = calendar.component(.day, from: date)
         let month = calendar.component(.month, from: date)
         let year = calendar.component(.year, from: date)
         let hour = calendar.component(.hour, from: date)
         let minute = calendar.component(.minute, from: date)
+        
+     
 
         return "\(day)/\(month)/\(year) - \(hour):\(minute)"
+    }
+
+    private func initialLastConnectedValuesFromUserDefault() {
+        // Valor inicial do hitórico, recuperado do UserDefaults.
+        if let data = UserDefaults.standard.object(forKey: "LastConnected") as? Data {
+            let decoder = JSONDecoder()
+            if let items = try? decoder.decode([LastPeripheralModel].self, from: data) {
+                lastConnected = items
+                print(items)
+            }
+        }
     }
 
 }
@@ -139,7 +159,9 @@ extension ViewController: CBCentralManagerDelegate {
             startScanning()
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 if central.state != .poweredOn {
-                    UIAlertController.findCurrentController()?.dismiss(animated: true)
+                    if UIAlertController.findCurrentController() == self {
+                        UIAlertController.findCurrentController()?.dismiss(animated: true)
+                    }
                 }
             }
         @unknown default:

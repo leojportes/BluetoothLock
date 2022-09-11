@@ -16,6 +16,7 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         view.backgroundColor = .white
         setupView()
+        view.backgroundColor = UIColor(named: "lightGray")
     }
     
     var peripherics: [LastPeripheralModel] = [] {
@@ -36,6 +37,7 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
     lazy var removeAllButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "trash"), for: .normal)
+        button.tintColor = UIColor(named: "darkGray")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(nil, action: #selector(didTapRemoveAll), for: .touchUpInside)
         return button

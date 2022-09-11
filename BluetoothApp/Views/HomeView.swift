@@ -65,14 +65,9 @@ final class HomeView: UIView {
     lazy var lastsConnectedButton: UIButton = {
         let button = UIButton()
         button.setTitle("Últimos conectados", for: .normal)
-        button.backgroundColor = .black
+        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        button.backgroundColor = UIColor(named: "darkGray")
         button.roundCorners(cornerRadius: 15)
-        button.addShadow(
-            color: UIColor.black,
-            size: CGSize(width: -3, height: 3),
-            opacity: 0.2,
-            radius: 2.0
-        )
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(nil, action: #selector(didTapLastConnected), for: .touchUpInside)
         return button
@@ -103,8 +98,8 @@ extension HomeView: ViewCodeContract {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: bluetoothImage.bottomAnchor, constant: 15),
-            tableView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5),
-            tableView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5),
+            tableView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
+            tableView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: lastsConnectedButton.topAnchor, constant: -15),
         ])
 
@@ -112,11 +107,11 @@ extension HomeView: ViewCodeContract {
             .leftAnchor(in: self, padding: 10)
             .rightAnchor(in: self, padding: 10)
             .bottomAnchor(in: self, padding: 20)
-            .heightAnchor(45)
+            .heightAnchor(50)
     }
     
     func setupConfiguration() {
-        self.backgroundColor = .white
+        self.backgroundColor = UIColor(named: "lightGray")
     }
     
     // MARK: - Actions
