@@ -8,15 +8,17 @@
 import UIKit
 import CoreBluetooth
 import AVFoundation
+import MobileCoreServices
 
 class ViewController: UIViewController {
 
     // MARK: - Private properties
-    private var centralManager: CBCentralManager?
     private lazy var rootView = HomeView()
+    private var centralManager: CBCentralManager?
     private var peripheral: CBPeripheral?
     private var lastConnected: [LastPeripheralModel] = []
-    private var timer: Timer?
+    private var imageTaked: UIImage?
+    private var labelTime = UILabel()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -72,7 +74,7 @@ class ViewController: UIViewController {
         if centralManager?.state == .poweredOff {
             self.showAlert(
                 title: "Bluetooth desligado!",
-                messsage: "Habilite no menu do seu iPhone.",
+                messsage: "Habilite nas configurações do seu iPhone.",
                 hasButton: true
             )
         }
@@ -242,9 +244,10 @@ extension ViewController: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        self.showAlert(title: "Dispositivo desconectado!")
+//        self.showAlert(title: "Dispositivo desconectado!")
         rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
-        startSong(id: 1005)
+        self.takePicture()
+//        startSong(id: 1005)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect didFailToConnectPeripheral: CBPeripheral, error: Error?) {
@@ -259,6 +262,41 @@ extension ViewController: CBCentralManagerDelegate {
 
 extension ViewController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-//        print(service.peripheral?.name)
+        //        print(service.peripheral?.name)
+    }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    @objc
+    func takePicture() {
+        DispatchQueue.main.async {
+            let imagePicker = UIImagePickerController()
+            if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera) {
+                
+                imagePicker.delegate = self
+                imagePicker.sourceType = .camera
+                imagePicker.allowsEditing = false
+                imagePicker.showsCameraControls = false
+                imagePicker.cameraDevice = .front
+                self.present(imagePicker, animated: true) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        imagePicker.takePicture()
+                    }
+                }
+                
+            }
+        }
+    }
+
+    // Método que salva a foto na galeria do device.
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+        if let image = info[.originalImage] as? UIImage {
+            imageTaked = image
+            UIImageWriteToSavedPhotosAlbum(image, self, nil, .none)
+            picker.dismiss(animated: true)
+            return
+        }
     }
 }
