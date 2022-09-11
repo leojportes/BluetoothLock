@@ -11,12 +11,14 @@ import AVFoundation
 
 class ViewController: UIViewController {
 
+    // MARK: - Private properties
     private var centralManager: CBCentralManager?
     private lazy var rootView = HomeView()
     private var peripheral: CBPeripheral?
-    private var lastConnected: [PeripheralModel] = []
-    var timer: Timer?
+    private var lastConnected: [LastPeripheralModel] = []
+    private var timer: Timer?
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
@@ -25,6 +27,14 @@ class ViewController: UIViewController {
         self.startScanning()
         self.rootView.didPullRefresh = pullRefresh
         self.rootView.didTapLastConnectedAction = openLastsConnected
+        
+        if let data = UserDefaults.standard.object(forKey: "LastConnected") as? Data {
+            let decoder = JSONDecoder()
+            if let items = try? decoder.decode([LastPeripheralModel].self, from: data) {
+                lastConnected = items
+                print(items)
+            }
+        }
     }
 
     override func loadView() {
@@ -36,8 +46,9 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    // MARK: - Private methods
     // Limpa toda a lista e começa escaneando novamente.
-    func startScanning() {
+    private func startScanning() {
             self.rootView.peripherics.removeAll()
             if let central = self.centralManager {
                 central.scanForPeripherals(
@@ -78,7 +89,11 @@ class ViewController: UIViewController {
             showAlert(title: "Histórico vazio", messsage: "", hasButton: true)
         } else {
             let controller = LastConnectedListView()
+            // Action do botão de limpar lista na tela de histórico
             controller.didTapRemoveAllAction = weakify { weakSelf in
+                if let appDomain = Bundle.main.bundleIdentifier {
+                    UserDefaults.standard.removePersistentDomain(forName: appDomain)
+                }
                 weakSelf.lastConnected.removeAll()
                 controller.peripherics = self.lastConnected
                 controller.tableView.reloadData()
@@ -89,13 +104,24 @@ class ViewController: UIViewController {
             present(controller, animated: true)
         }
     }
-    
-    private func didTapRemoveAll() {
-      
+
+    // Monta a data atual da conexão para mostrar na tela de histórico
+    private func makeCurrentDate() -> String {
+        let date = Date()
+        let calendar = Calendar.current
+
+        let day = calendar.component(.day, from: date)
+        let month = calendar.component(.month, from: date)
+        let year = calendar.component(.year, from: date)
+        let hour = calendar.component(.hour, from: date)
+        let minute = calendar.component(.minute, from: date)
+
+        return "\(day)/\(month)/\(year) - \(hour):\(minute)"
     }
 
 }
 
+// MARK: - CBCentralManager Delegate
 extension ViewController: CBCentralManagerDelegate {
     
     // MARK: - Verifica o estado do bluetooth
@@ -119,7 +145,7 @@ extension ViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 
         let doesNotContainPeripheral = rootView.peripherics.map(\.uuid).doesNotContain(peripheral.identifier.uuidString)
-        
+        peripheral.delegate = self
         // Se o objeto requisitado pelo scan ainda não existir na lista da view "rootView.peripherics" ...
         // ... o item será adicionado na struct "PeripheralModel".
         if doesNotContainPeripheral {
@@ -135,9 +161,9 @@ extension ViewController: CBCentralManagerDelegate {
 
         // Ao clicar em cada celula, recuperamos o indexpath clicado pela closure 'didSelectPeripheral' e fazemos a conexão do ...
         // bluetooth pelo método "self?.connectBLE"
-        self.rootView.didSelectPeripheral = { [ weak self ] indexpath in
-            self?.showPowerOffAlert()
-            self?.connectBLE(indexPath: indexpath.item, item: self?.rootView.peripherics ?? [], CBperipheral: peripheral)
+        self.rootView.didSelectPeripheral = weakify {
+            $0.showPowerOffAlert()
+            $0.connectBLE(indexPath: $1.item, item: $0.rootView.peripherics, CBperipheral: peripheral)
         }
         
     }
@@ -153,7 +179,6 @@ extension ViewController: CBCentralManagerDelegate {
             self.showAlertLoading(title: "Conectando...", peripheral: periphericName)
         case .connected:
             self.centralManager?.stopScan()
-//            self.showAlertLoading(title: "Dispositivo conectado!", peripheral: periphericName, isOnActivity: false)
         case .disconnecting:
             self.centralManager?.stopScan()
             self.showAlertLoading(title: "Desconectando...", peripheral: periphericName)
@@ -171,13 +196,19 @@ extension ViewController: CBCentralManagerDelegate {
         )
         // Adiciona os items para a tela de últimos conectados
         self.lastConnected.append(
-            PeripheralModel(
+            LastPeripheralModel(
                 name: peripheral.name?.description ?? "Desconhecido",
                 uuid: peripheral.identifier.uuidString,
                 rssi: "",
-                peripheral: peripheral
+                date: makeCurrentDate()
             )
         )
+        
+        // Salva no UserDefaults a lista de ultimos conectados.
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(self.lastConnected) {
+            UserDefaults.standard.set(encoded, forKey: "LastConnected")
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
@@ -186,7 +217,7 @@ extension ViewController: CBCentralManagerDelegate {
         startSong(id: 1005)
     }
     
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+    func centralManager(_ central: CBCentralManager, didFailToConnect didFailToConnectPeripheral: CBPeripheral, error: Error?) {
         self.showAlert(title: "Conexão falhou")
     }
 

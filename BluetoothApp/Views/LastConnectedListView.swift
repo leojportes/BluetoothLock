@@ -18,7 +18,7 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
         setupView()
     }
     
-    var peripherics: [PeripheralModel] = [] {
+    var peripherics: [LastPeripheralModel] = [] {
         didSet {
             tableView.reloadData()
         }
@@ -70,7 +70,8 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
         cell.setup(
             name: "Dispositivo: \(item.name)",
             uuid: "uuid: \(item.uuid)",
-            rssi: ""
+            rssi: "",
+            date: item.date
         )
 
         return cell
