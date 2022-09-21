@@ -244,17 +244,20 @@ extension ViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         self.showAlert(title: "Dispositivo desconectado!")
         rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
-        startSong(id: 1005)
+        startSong(id: 1005, count: 10000)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect didFailToConnectPeripheral: CBPeripheral, error: Error?) {
         self.showAlert(title: "Conexão falhou")
     }
-
-    private func startSong(id: UInt32) {
-        AudioServicesPlaySystemSound(SystemSoundID(id))
-    }
     
+    func startSong(id: SystemSoundID, count: Int){
+        AudioServicesPlaySystemSoundWithCompletion(id) {
+            if count > 0 {
+                self.startSong(id: id, count: count - 1)
+            }
+        }
+    }
 }
 
 extension ViewController: CBPeripheralDelegate {
