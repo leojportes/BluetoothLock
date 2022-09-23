@@ -8,6 +8,7 @@
 import UIKit
 import CoreBluetooth
 import AVFoundation
+import CoreLocation
 
 class ViewController: UIViewController {
 
@@ -17,48 +18,46 @@ class ViewController: UIViewController {
     private var peripheral: CBPeripheral?
     private var lastConnected: [LastPeripheralModel] = []
     private var timer: Timer?
-    
+    private let locationService = CLLocationManager()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.centralManager = CBCentralManager(delegate: self, queue: nil)
-        self.centralManager?.delegate = self
-        self.showPowerOffAlert()
-        self.startScanning()
-        self.rootView.didPullRefresh = pullRefresh
+        initializeLocationServices()
+        setupCoreBluetooth()
+        self.rootView.didPullRefresh = pullToRefresh
         self.rootView.didTapLastConnectedAction = openLastsConnected
-        
-        self.initialLastConnectedValuesFromUserDefault()
     }
 
     override func loadView() {
         super.loadView()
         view = rootView
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
+
     // MARK: - Private methods
-    // Limpa toda a lista e começa escaneando novamente.
+
+    /// Clears the entire list and starts scanning again.
     private func startScanning() {
-            self.rootView.peripherics.removeAll()
-            if let central = self.centralManager {
-                central.scanForPeripherals(
-                    withServices: nil,
-                    options: [
-                        CBCentralManagerScanOptionAllowDuplicatesKey: false,
-                        CBConnectPeripheralOptionNotifyOnConnectionKey: false,
-                        CBConnectPeripheralOptionNotifyOnDisconnectionKey: false,
-                        CBConnectPeripheralOptionNotifyOnNotificationKey: false
-                    ]
-                )
-            }
+        self.rootView.peripherics.removeAll()
+        if let central = self.centralManager {
+            central.scanForPeripherals(
+                withServices: nil,
+                options: [
+                    CBCentralManagerScanOptionAllowDuplicatesKey: false,
+                    CBConnectPeripheralOptionNotifyOnConnectionKey: false,
+                    CBConnectPeripheralOptionNotifyOnDisconnectionKey: false,
+                    CBConnectPeripheralOptionNotifyOnNotificationKey: false
+                ]
+            )
+        }
     }
-    
-    // Ao fazer o pull na tableView, é feito o scan novamente, e após 5 segundos, o activity da tableView é parado.
-    private func pullRefresh() {
+
+    /// When pulling the tableView, it is scanned again, and after 5 seconds, the tableView activity is stopped.
+    private func pullToRefresh() {
         self.showPowerOffAlert()
         self.startScanning()
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
@@ -66,8 +65,8 @@ class ViewController: UIViewController {
             self.rootView.tableView.reloadData()
         }
     }
-    
-    // Mostra o alert avisando que o bluetooth está desligado.
+
+    /// Shows the alert warning that bluetooth is off.
     private func showPowerOffAlert() {
         if centralManager?.state == .poweredOff {
             self.showAlert(
@@ -80,10 +79,10 @@ class ViewController: UIViewController {
     
     private func openLastsConnected() {
         if self.lastConnected.isEmpty {
-            showAlert(title: "Histórico vazio", messsage: "", hasButton: true)
+            showAlert(title: "Histórico vazio!", messsage: "", hasButton: true)
         } else {
             let controller = LastConnectedListView()
-            // Action do botão de limpar lista na tela de histórico
+            /// Clear list button action on history screen
             controller.didTapRemoveAllAction = weakify { weakSelf in
                 if weakSelf.lastConnected.isEmpty {
                     UIViewController.findCurrentController()?.showAlert(title: "Histórico já é vazio.")
@@ -110,33 +109,36 @@ class ViewController: UIViewController {
         }
     }
 
-    // Monta a data atual da conexão para mostrar na tela de histórico
+    /// Sets the current connection date to show on the history screen
     private func makeCurrentDate() -> String {
         let date = Date()
         var calendar = Calendar.current
-
         calendar.locale = Locale(identifier: "pt_BR")
-        
         let day = calendar.component(.day, from: date)
         let month = calendar.component(.month, from: date)
         let year = calendar.component(.year, from: date)
         let hour = calendar.component(.hour, from: date)
         let minute = calendar.component(.minute, from: date)
-        
-     
-
         return "\(day)/\(month)/\(year) - \(hour):\(minute)"
     }
 
+    /// Historic's initial value, retrieved from UserDefaults.
     private func initialLastConnectedValuesFromUserDefault() {
-        // Valor inicial do hitórico, recuperado do UserDefaults.
         if let data = UserDefaults.standard.object(forKey: "LastConnected") as? Data {
             let decoder = JSONDecoder()
             if let items = try? decoder.decode([LastPeripheralModel].self, from: data) {
                 lastConnected = items
-                print(items)
             }
         }
+    }
+
+    /// CoreBluetooth setup.
+    private func setupCoreBluetooth() {
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+        self.centralManager?.delegate = self
+        self.showPowerOffAlert()
+        self.startScanning()
+        self.initialLastConnectedValuesFromUserDefault()
     }
 
 }
@@ -144,7 +146,7 @@ class ViewController: UIViewController {
 // MARK: - CBCentralManager Delegate
 extension ViewController: CBCentralManagerDelegate {
     
-    // MARK: - Verifica o estado do bluetooth
+    /// Check bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch (central.state) {
         case .poweredOff:
@@ -173,8 +175,9 @@ extension ViewController: CBCentralManagerDelegate {
 
         let doesNotContainPeripheral = rootView.peripherics.map(\.uuid).doesNotContain(peripheral.identifier.uuidString)
         peripheral.delegate = self
-        // Se o objeto requisitado pelo scan ainda não existir na lista da view "rootView.peripherics" ...
-        // ... o item será adicionado na struct "PeripheralModel".
+        
+        /// If the object requested by the scan does not yet exist in the list of the "rootView.peripherics" view
+        /// The item will be added in the struct "PeripheralModel".
         if doesNotContainPeripheral {
             rootView.peripherics.append(
                 PeripheralModel(
@@ -186,8 +189,8 @@ extension ViewController: CBCentralManagerDelegate {
             )
         }
 
-        // Ao clicar em cada celula, recuperamos o indexpath clicado pela closure 'didSelectPeripheral' e fazemos a conexão do ...
-        // bluetooth pelo método "self?.connectBLE"
+        /// By clicking on each cell, we retrieve the indexpath clicked by the 'didSelectPeripheral' closure
+        /// and we make the bluetooth connection by the method "self?.connectBLE"
         self.rootView.didSelectPeripheral = weakify {
             $0.showPowerOffAlert()
             $0.connectBLE(indexPath: $1.item, item: $0.rootView.peripherics, CBperipheral: peripheral)
@@ -215,7 +218,6 @@ extension ViewController: CBCentralManagerDelegate {
         @unknown default:
             break
         }
-        print("Item clicado: ", item[indexPath])
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -224,7 +226,8 @@ extension ViewController: CBCentralManagerDelegate {
             name: peripheral.name?.description ?? "Desconhecido",
             uuid: peripheral.identifier.uuidString
         )
-        // Adiciona os items para a tela de últimos conectados
+
+        /// Adds items to the last logged in screen
         self.lastConnected.append(
             LastPeripheralModel(
                 name: peripheral.name?.description ?? "Desconhecido",
@@ -234,7 +237,7 @@ extension ViewController: CBCentralManagerDelegate {
             )
         )
         
-        // Salva no UserDefaults a lista de ultimos conectados.
+        /// Saves the last connected list in UserDefaults.
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(self.lastConnected) {
             UserDefaults.standard.set(encoded, forKey: "LastConnected")
@@ -246,11 +249,12 @@ extension ViewController: CBCentralManagerDelegate {
         rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
         startSong(id: 1005, count: 10000)
     }
-    
+
     func centralManager(_ central: CBCentralManager, didFailToConnect didFailToConnectPeripheral: CBPeripheral, error: Error?) {
         self.showAlert(title: "Conexão falhou")
     }
-    
+
+    /// Activate the audible alert.
     func startSong(id: SystemSoundID, count: Int){
         AudioServicesPlaySystemSoundWithCompletion(id) {
             if count > 0 {
@@ -262,6 +266,60 @@ extension ViewController: CBCentralManagerDelegate {
 
 extension ViewController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-//        print(service.peripheral?.name)
+    }
+}
+
+// MARK: - CLLocationManager Delegate
+extension ViewController: CLLocationManagerDelegate {
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            fetchAddress(from: location) { city, country, street, areasOfInterest, subLocality, error in
+                
+                guard let city = city, let country = country, error == nil else { return }
+                let coordinate = location.coordinate
+
+                FirebaseManager.shared.updateLocation(
+                    longitude: "\(coordinate.longitude)",
+                    latitude: "\(coordinate.latitude)",
+                    country: country,
+                    city: city,
+                    street: street ?? "Endereço indisponível",
+                    areasOfInterest: areasOfInterest ?? [],
+                    subLocality: subLocality ?? "Bairro indisponível"
+                )
+            }
+        }
+    }
+
+    private func initializeLocationServices() {
+        locationService.delegate = self
+        locationService.requestAlwaysAuthorization()
+        locationService.startUpdatingLocation()
+        locationService.delegate = self
+        locationService.allowsBackgroundLocationUpdates = true
+    }
+
+    /// Fetch the attributes of the current address.
+    func fetchAddress(
+        from location: CLLocation,
+        completion: @escaping (
+            _ city: String?,
+            _ country:  String?,
+            _ street:  String?,
+            _ areasInterest: [String]?,
+            _ subLocality: String?,
+            _ error: Error?) -> ()
+    ) {
+        CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
+            completion(
+                placemarks?.first?.locality,
+                placemarks?.first?.country,
+                placemarks?.first?.name,
+                placemarks?.first?.areasOfInterest,
+                placemarks?.first?.subLocality,
+                error
+            )
+        }
     }
 }
