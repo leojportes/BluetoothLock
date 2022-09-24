@@ -19,11 +19,11 @@ class ViewController: UIViewController {
     private var lastConnected: [LastPeripheralModel] = []
     private var timer: Timer?
     private let locationService = CLLocationManager()
+    private var audioPlayer = AVAudioPlayer()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        initializeLocationServices()
         setupCoreBluetooth()
         self.rootView.didPullRefresh = pullToRefresh
         self.rootView.didTapLastConnectedAction = openLastsConnected
@@ -78,6 +78,7 @@ class ViewController: UIViewController {
     }
     
     private func openLastsConnected() {
+        playSound()
         if self.lastConnected.isEmpty {
             showAlert(title: "Histórico vazio!", messsage: "", hasButton: true)
         } else {
@@ -247,7 +248,8 @@ extension ViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         self.showAlert(title: "Dispositivo desconectado!")
         rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
-        startSong(id: 1005, count: 10000)
+        playSound()
+        initializeLocationServices()
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect didFailToConnectPeripheral: CBPeripheral, error: Error?) {
@@ -262,6 +264,20 @@ extension ViewController: CBCentralManagerDelegate {
             }
         }
     }
+
+    func playSound() {
+        guard let url = Bundle.main.url(forResource: "v15r0-exqpk", withExtension: "mp3")
+         else {
+            return
+         }
+         do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer.play()
+         }
+         catch {
+         }
+    }
+
 }
 
 extension ViewController: CBPeripheralDelegate {

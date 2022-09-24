@@ -8,16 +8,10 @@
 import Foundation
 import UIKit
 
-class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class LastConnectedListView: UIViewController {
     
+    // MARK: - Properties
     var didTapRemoveAllAction: (() -> Void)?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        setupView()
-        view.backgroundColor = UIColor(named: "lightGray")
-    }
     
     var peripherics: [LastPeripheralModel] = [] {
         didSet {
@@ -25,6 +19,15 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        setupView()
+        view.backgroundColor = UIColor(named: "lightGray")
+    }
+
+    // MARK: - View code
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -54,35 +57,16 @@ class LastConnectedListView: UIViewController, UITableViewDelegate, UITableViewD
         table.dataSource = self
         return table
     }()
-    
+
+    // MARK: - Actions
     @objc
     private func didTapRemoveAll() {
         self.didTapRemoveAllAction?()
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return peripherics.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
-        cell.selectionStyle = .none
-        let item = peripherics[indexPath.row]
-
-        cell.setup(
-            name: "Dispositivo: \(item.name)",
-            uuid: "uuid: \(item.uuid)",
-            rssi: "",
-            date: item.date
-        )
-
-        return cell
-    }
-    
 
 }
 
-// MARK: - View Code Contract
+// MARK: - View code contract
 extension LastConnectedListView: ViewCodeContract {
     
     func setupHierarchy() {
@@ -110,4 +94,27 @@ extension LastConnectedListView: ViewCodeContract {
         ])
     }
     
+}
+
+// MARK: - UITableView DataSource & UITableView Delegate
+extension LastConnectedListView: UITableViewDelegate, UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return peripherics.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCell
+        cell.selectionStyle = .none
+        let item = peripherics[indexPath.row]
+
+        cell.setup(
+            name: "Dispositivo: \(item.name)",
+            uuid: "uuid: \(item.uuid)",
+            rssi: "",
+            date: item.date
+        )
+
+        return cell
+    }
 }

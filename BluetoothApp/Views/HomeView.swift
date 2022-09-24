@@ -11,6 +11,7 @@ import CoreBluetooth
 
 final class HomeView: UIView {
     
+    // MARK: - Properties
     var didSelectPeripheral: ((IndexPath) -> Void)?
     var didPullRefresh: (() -> Void)?
     var didTapLastConnectedAction: (() -> Void)?
@@ -30,6 +31,7 @@ final class HomeView: UIView {
         }
     }
 
+    // MARK: - Init
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         tableView.refreshControl = UIRefreshControl()
@@ -72,7 +74,8 @@ final class HomeView: UIView {
         button.addTarget(nil, action: #selector(didTapLastConnected), for: .touchUpInside)
         return button
     }()
-    
+
+    // MARK: - Actions
     @objc
     private func didTapLastConnected() {
         self.didTapLastConnectedAction?()
@@ -164,7 +167,6 @@ extension HomeView: UITableViewDelegate, UITableViewDataSource {
         return headerView
     }
 
-    // Tamanho em altura da Headerview `CustomHeader`.
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         UITableView.automaticDimension
     }

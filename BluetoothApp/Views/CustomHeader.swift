@@ -89,6 +89,7 @@ class CustomHeader: UITableViewHeaderFooterView, ViewCodeContract {
      
     }
 
+    // MARK: - Init
     override init(reuseIdentifier: String?) {
         super .init(reuseIdentifier: reuseIdentifier)
         self.backgroundColor = .clear

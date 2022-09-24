@@ -98,7 +98,8 @@ extension CustomCell: ViewCodeContract {
             .rightAnchor(in: container, attribute: .right, padding: 10)
             .bottomAnchor(in: container, attribute: .bottom, padding: 10)
     }
-    
+
+    // MARK: - Methods
     func setup(name: String, uuid: String, rssi: String, date: String = "") {
         namePeripheral.text = name
         uuidPeripheral.text = uuid
