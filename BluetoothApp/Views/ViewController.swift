@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCoreBluetooth()
+        initializeLocationServices()
         self.rootView.didPullRefresh = pullToRefresh
         self.rootView.didTapLastConnectedAction = openLastsConnected
     }
@@ -78,7 +79,6 @@ class ViewController: UIViewController {
     }
     
     private func openLastsConnected() {
-        playSound()
         if self.lastConnected.isEmpty {
             showAlert(title: "Histórico vazio!", messsage: "", hasButton: true)
         } else {
@@ -249,7 +249,7 @@ extension ViewController: CBCentralManagerDelegate {
         self.showAlert(title: "Dispositivo desconectado!")
         rootView.connectedValue = ConnectedPeripheralModel(name: "Nenhum", uuid: "")
         playSound()
-        initializeLocationServices()
+        locationService.startUpdatingLocation()
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect didFailToConnectPeripheral: CBPeripheral, error: Error?) {
@@ -311,7 +311,6 @@ extension ViewController: CLLocationManagerDelegate {
     private func initializeLocationServices() {
         locationService.delegate = self
         locationService.requestAlwaysAuthorization()
-        locationService.startUpdatingLocation()
         locationService.delegate = self
         locationService.allowsBackgroundLocationUpdates = true
     }
